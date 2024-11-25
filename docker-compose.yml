@@ -1,0 +1,32 @@
+services:
+  database:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+
+  app:
+    image: task-image
+    container_name: task-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/postgres
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+
+volumes:
+  postgres_data:
